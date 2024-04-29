@@ -16,10 +16,10 @@ There are 4 python files included in this repository:
 ## Usage:
 To run the simulate authentication protocols:
 1. Navigate to the project directory
-2. Run the command for the dedicated script:
+2. Run the command for the dedicated script (if using a Mac, use python3 instead):
     - For Needham-Schroeder Symmetric Key:
-        python Needham-Schroeder-Example.py
+        >python Needham-Schroeder-Example.py
     - For Needham-Schroeder Public Key:
-        python Needham-Schroeder-Public.py
+        >python Needham-Schroeder-Public.py
     - For Wide-Mouth Frog Authentication:
-        python Wide-Mouth-Frog-Example.py
+        >python Wide-Mouth-Frog-Example.py
