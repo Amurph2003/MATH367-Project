@@ -31,9 +31,14 @@ ServerRecords['Alice'] = Alice['pubKey']
 ServerRecords['Bob'] = Bob['pubKey']
 
 
+print("Setup and Keys:\n")
+print(f"Alice:\nE = {Alice['pubKey'][0]}\nN = {Alice['pubKey'][1]}\nD = {Alice['privKey'][0]}\n")
+print(f"Bob:\nE = {Bob['pubKey'][0]}\nN = {Bob['pubKey'][1]}\nD = {Bob['privKey'][0]}\n")
+print(f"Authentication Server:\nE = {Server['pubKey'][0]}\nN = {Server['pubKey'][1]}\nD = {Server['privKey'][0]}\n")
+
 # Alice messages server for bob pub key using Spub
 
-print("Alice -> Server: I need to message Bob")
+print("Alice -> Server: I need to message Bob\n")
 
 # Server encrypts Bob's Public Key using Server Private Key
 BobSignedFromServer = []
@@ -41,13 +46,13 @@ for char in Bob['pubKeyString']:
     BobSignedFromServer.append(RSA.encrypt(ord(char), Server['privKey'][0], Server['privKey'][1]))
 for char in ',Bob':
     BobSignedFromServer.append(RSA.encrypt(ord(char), Server['privKey'][0], Server['privKey'][1]))
-print("Server: Let me encrypt his public key and send it to you")
+print("Server: Let me encrypt his public key and send it to you\n")
 
 # Server sends to alice using Spr key
 
-print("Server: Here is Bob's public key, encrypted with my private key:", BobSignedFromServer)
+print("Server: Here is Bob's public key, encrypted with my private key:\n", BobSignedFromServer, sep="")
 
-print("Alice: Thanks. I'll decrypt it to verify it came from the server, then use it to message Bob")
+print("\nAlice: Thanks. I'll decrypt it to verify it came from the server, then use it to message Bob\n")
 
 BobDecrypted = ''
 for char in BobSignedFromServer:
@@ -56,20 +61,20 @@ for char in BobSignedFromServer:
 BobDecryptedKey = BobDecrypted.split(",")
 # print(BobDecryptedKey)
 
-print("Alice: Now that I have Bob's public key, I need a nonce to message him")
+print("Alice: Now that I have Bob's public key, I need a nonce to message him\n")
 
 # Alice creates nonce
 AliceNonce = random.randint(1, 1000000)
 # print(AliceNonce)
 # Encrypts and sends to Bob using Bobpub
-print("Alice: I will encrypt my nonce and name to send to Bob now using his public key from the server")
+print("Alice: I will encrypt my nonce and name to send to Bob now using his public key from the server\n")
 AliceBobMessage = str(AliceNonce) + "Alice"
 AliceBobMessageEncrypted = []
 for char in AliceBobMessage:
     AliceBobMessageEncrypted.append(RSA.encrypt(ord(char), int(BobDecryptedKey[0]), int(BobDecryptedKey[1])))
 
 # Bob gets Alicepub from Server
-print("Bob: I'm getting a message from someone claiming to be Alice. Let me ask the server for Alice's public key to respond")
+print("Bob: I'm getting a message from someone claiming to be Alice. Let me ask the server for Alice's public key to respond\n")
 AliceBobMessageDecrypted = ""
 
 for char in AliceBobMessageEncrypted:
@@ -79,7 +84,7 @@ AliceDecryptedNonce = AliceBobMessageDecrypted.split("Alice")
 # print(AliceBobMessageDecrypted)
 # print(AliceDecryptedNonce)
 
-print("Bob -> Server: I need to message Alice")
+print("Bob -> Server: I need to message Alice\n")
 
 # Server encrypts Alice's Public Key using Server Private Key
 AliceSignedFromServer = []
@@ -87,11 +92,11 @@ for char in Alice['pubKeyString']:
     AliceSignedFromServer.append(RSA.encrypt(ord(char), Server['privKey'][0], Server['privKey'][1]))
 for char in ',Alice':
     AliceSignedFromServer.append(RSA.encrypt(ord(char), Server['privKey'][0], Server['privKey'][1]))
-print("Server: Let me encrypt her public key and send it to you")
+print("Server: Let me encrypt her public key and send it to you\n")
 
-print("Server: Here is Alice's public key, encrypted with my private key:", AliceSignedFromServer)
+print("Server: Here is Alice's public key, encrypted with my private key:\n", AliceSignedFromServer, sep="")
 
-print("Bob: Thanks. I'll decrypt it to verify it came from the server, then use it to message Alice")
+print("\nBob: Thanks. I'll decrypt it to verify it came from the server, then use it to message Alice\n")
 
 AliceDecrypted = ''
 for char in AliceSignedFromServer:
@@ -100,7 +105,7 @@ for char in AliceSignedFromServer:
 AliceDecryptedKey = AliceDecrypted.split(",")
 # print(AliceDecryptedKey)
 
-print("Bob: Now that I have Alice's public key, I need a nonce to message start the double handshake")
+print("Bob: Now that I have Alice's public key, I need a nonce to message start the double handshake\n")
 BobNonce = random.randint(1, 1000000)
 BobAliceMessage = str(AliceDecryptedNonce[0]) + "," + str(BobNonce)
 
@@ -111,7 +116,7 @@ for char in BobAliceMessage:
     BobAliceMessageEncrypted.append(RSA.encrypt(ord(char), int(AliceDecryptedKey[0]), int(AliceDecryptedKey[1])))
 
 # Alice verifies her nonce was decrypted properly
-print("Alice: I'm getting a message from someone claiming to be Bob. Let me check if he decrypted my nonce properly and then deccrypt his")
+print("Alice: I'm getting a message from someone claiming to be Bob. Let me check if he decrypted my nonce properly and then deccrypt his\n")
 BobAliceMessageDecrypted = ""
 for char in BobAliceMessageEncrypted:
     BobAliceMessageDecrypted += chr(RSA.decrypt(char, Alice['privKey'][0], Alice['privKey'][1]))
@@ -119,9 +124,9 @@ BobAliceMessageDecrypted = BobAliceMessageDecrypted.split(",")
 # print(AliceNonce)
 # print(BobAliceMessageDecrypted)
 if int(BobAliceMessageDecrypted[0]) == AliceNonce:
-    print("Alice: It's Bob, He successfully decrypted my nonce! I'll send his back so he knows its me!")
+    print("Alice: It's Bob, He successfully decrypted my nonce! I'll send his back so he knows its me!\n")
 else:
-    print("Alice: This isn't my nonce, so this may not be Bob")
+    print("Alice: This isn't my nonce, so this may not be Bob\n")
 
 # Alice sends Bob his decrypted nonce using Bobpub
 AliceBobMessage2 = BobAliceMessageDecrypted[1]
